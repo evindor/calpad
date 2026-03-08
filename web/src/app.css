@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* Semantic color tokens */
+:root {
+	--font-mono: 'JetBrains Mono', ui-monospace, monospace;
+	--font-size: 14px;
+	--line-height: 1.8;
+	--sidebar-width: 220px;
+}
+
+/* Monokai (default) */
+[data-theme='monokai'] {
+	--bg: #272822;
+	--bg-sidebar: #1e1f1a;
+	--bg-hover: #3e3d32;
+	--bg-active: #49483e;
+	--fg: #f8f8f2;
+	--fg-muted: #75715e;
+	--color-number: #ae81ff;
+	--color-unit: #66d9ef;
+	--color-keyword: #f92672;
+	--color-operator: #f8f8f2;
+	--color-label: #e6db74;
+	--color-result: #a6e22e;
+	--color-error: #f92672;
+	--color-header: #e6db74;
+	--color-comment: #75715e;
+	--border: #3e3d32;
+}
+
+[data-theme='solarized-dark'] {
+	--bg: #002b36;
+	--bg-sidebar: #00212b;
+	--bg-hover: #073642;
+	--bg-active: #094352;
+	--fg: #839496;
+	--fg-muted: #586e75;
+	--color-number: #d33682;
+	--color-unit: #2aa198;
+	--color-keyword: #cb4b16;
+	--color-operator: #839496;
+	--color-label: #b58900;
+	--color-result: #859900;
+	--color-error: #dc322f;
+	--color-header: #b58900;
+	--color-comment: #586e75;
+	--border: #073642;
+}
+
+[data-theme='solarized-light'] {
+	--bg: #fdf6e3;
+	--bg-sidebar: #eee8d5;
+	--bg-hover: #eee8d5;
+	--bg-active: #ddd6c1;
+	--fg: #657b83;
+	--fg-muted: #93a1a1;
+	--color-number: #d33682;
+	--color-unit: #2aa198;
+	--color-keyword: #cb4b16;
+	--color-operator: #657b83;
+	--color-label: #b58900;
+	--color-result: #859900;
+	--color-error: #dc322f;
+	--color-header: #b58900;
+	--color-comment: #93a1a1;
+	--border: #eee8d5;
+}
+
+[data-theme='dracula'] {
+	--bg: #282a36;
+	--bg-sidebar: #21222c;
+	--bg-hover: #44475a;
+	--bg-active: #44475a;
+	--fg: #f8f8f2;
+	--fg-muted: #6272a4;
+	--color-number: #bd93f9;
+	--color-unit: #8be9fd;
+	--color-keyword: #ff79c6;
+	--color-operator: #f8f8f2;
+	--color-label: #f1fa8c;
+	--color-result: #50fa7b;
+	--color-error: #ff5555;
+	--color-header: #f1fa8c;
+	--color-comment: #6272a4;
+	--border: #44475a;
+}
+
+[data-theme='nord'] {
+	--bg: #2e3440;
+	--bg-sidebar: #272c36;
+	--bg-hover: #3b4252;
+	--bg-active: #434c5e;
+	--fg: #d8dee9;
+	--fg-muted: #4c566a;
+	--color-number: #b48ead;
+	--color-unit: #88c0d0;
+	--color-keyword: #bf616a;
+	--color-operator: #d8dee9;
+	--color-label: #ebcb8b;
+	--color-result: #a3be8c;
+	--color-error: #bf616a;
+	--color-header: #ebcb8b;
+	--color-comment: #4c566a;
+	--border: #3b4252;
+}
+
+[data-theme='gruvbox'] {
+	--bg: #282828;
+	--bg-sidebar: #1d2021;
+	--bg-hover: #3c3836;
+	--bg-active: #504945;
+	--fg: #ebdbb2;
+	--fg-muted: #665c54;
+	--color-number: #d3869b;
+	--color-unit: #83a598;
+	--color-keyword: #fb4934;
+	--color-operator: #ebdbb2;
+	--color-label: #fabd2f;
+	--color-result: #b8bb26;
+	--color-error: #fb4934;
+	--color-header: #fabd2f;
+	--color-comment: #665c54;
+	--border: #3c3836;
+}
+
+[data-theme='catppuccin'] {
+	--bg: #1e1e2e;
+	--bg-sidebar: #181825;
+	--bg-hover: #313244;
+	--bg-active: #45475a;
+	--fg: #cdd6f4;
+	--fg-muted: #585b70;
+	--color-number: #cba6f7;
+	--color-unit: #94e2d5;
+	--color-keyword: #f38ba8;
+	--color-operator: #cdd6f4;
+	--color-label: #f9e2af;
+	--color-result: #a6e3a1;
+	--color-error: #f38ba8;
+	--color-header: #f9e2af;
+	--color-comment: #585b70;
+	--border: #313244;
+}
+
+[data-theme='one-dark'] {
+	--bg: #282c34;
+	--bg-sidebar: #21252b;
+	--bg-hover: #2c313a;
+	--bg-active: #3e4451;
+	--fg: #abb2bf;
+	--fg-muted: #5c6370;
+	--color-number: #c678dd;
+	--color-unit: #56b6c2;
+	--color-keyword: #e06c75;
+	--color-operator: #abb2bf;
+	--color-label: #e5c07b;
+	--color-result: #98c379;
+	--color-error: #e06c75;
+	--color-header: #e5c07b;
+	--color-comment: #5c6370;
+	--border: #3e4451;
+}
+
+/* Reset & base */
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	height: 100%;
+	background: var(--bg);
+	color: var(--fg);
+	font-family: var(--font-mono);
+	font-size: var(--font-size);
+	-webkit-font-smoothing: antialiased;
+}
+
+::selection {
+	background: var(--bg-active);
+}
+
+button {
+	background: none;
+	border: none;
+	color: var(--fg-muted);
+	cursor: pointer;
+	font-family: inherit;
+	font-size: inherit;
+}
+
+button:hover {
+	color: var(--fg);
+}

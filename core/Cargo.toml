@@ -1,0 +1,3 @@
+[workspace]
+members = ["calpad-core", "calpad-wasm", "calpad-cli"]
+resolver = "2"
