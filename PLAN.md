@@ -105,8 +105,17 @@ Data flow: User types → Svelte sends full document to WASM → Rust parses all
 - [ ] Service worker for offline (needs vite-plugin-pwa setup)
 - [ ] PWA icons (need design)
 
-### Phase 6.5 - TUI
-Use ratatui to build a beautiful minimalistic TUI frontend.
+### Phase 6.5 - TUI ✅
+- [x] ratatui 0.30 + crossterm TUI frontend (`calpad-cli tui`)
+- [x] Custom text editor: multi-line editing, cursor, scrolling, page up/down
+- [x] Syntax highlighting: numbers, units, keywords, operators, labels, headers, comments
+- [x] Real-time evaluation with right-aligned results (same core engine as web)
+- [x] Sidebar: notes list with create/delete, keyboard navigation (Esc to toggle focus)
+- [x] 8 themes matching web (monokai default, dracula, nord, one-dark, catppuccin, gruvbox, solarized-dark/light)
+- [x] File-based persistence: ~/.local/share/calpad/ (notes.json, config.json, rates.json)
+- [x] Currency rates: cached rates loaded instantly, fresh rates fetched in background thread
+- [x] Keyboard shortcuts: ^B sidebar, ^N new, ^T cycle theme, ^Q quit, Esc toggle focus
+- [x] Status bar with shortcut hints and rate status
 
 ### Phase 7 — Distribution
 - [ ] CLI: GitHub Releases (linux-x64, linux-arm64, macos-x64, macos-arm64, windows-x64)

@@ -1,3 +1,5 @@
+mod tui;
+
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -19,12 +21,12 @@ enum Command {
 fn main() {
     let cli = Cli::parse();
 
-    match cli.command {
-        Some(Command::Tui) => {
-            eprintln!("TUI mode coming soon.");
-            std::process::exit(0);
+    if let Some(Command::Tui) = cli.command {
+        if let Err(e) = tui::run() {
+            eprintln!("Error: {e}");
+            std::process::exit(1);
         }
-        None => {}
+        return;
     }
 
     if let Some(expr) = cli.expression {
@@ -38,7 +40,12 @@ fn main() {
         // REPL mode: read from stdin
         use std::io::{self, BufRead};
         let stdin = io::stdin();
-        let input: String = stdin.lock().lines().map_while(Result::ok).collect::<Vec<_>>().join("\n");
+        let input: String = stdin
+            .lock()
+            .lines()
+            .map_while(Result::ok)
+            .collect::<Vec<_>>()
+            .join("\n");
         if !input.is_empty() {
             let results = calpad_core::evaluate_document(&input);
             for r in results {
