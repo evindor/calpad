@@ -1,31 +1,45 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { initCalpad, evaluateDocument, type LineResult } from '$lib/engine/calpad';
+	import { onMount, onDestroy } from 'svelte';
+	import { initCalpad, evaluateDocument, onCurrencyStatus, type LineResult } from '$lib/engine/calpad';
 
 	let { content = $bindable(''), onchange }: { content: string; onchange?: () => void } = $props();
 
 	let results: LineResult[] = $state([]);
 	let ready = $state(false);
+	let ratesVersion = $state(0);
 	let textarea: HTMLTextAreaElement;
 	let editorEl: HTMLDivElement;
 	let lines = $derived(content.split('\n'));
+	let copiedLine: number | null = $state(null);
+	let copiedTimer: ReturnType<typeof setTimeout>;
+
+	function copyResult(display: string, lineIndex: number) {
+		navigator.clipboard.writeText(display);
+		clearTimeout(copiedTimer);
+		copiedLine = lineIndex;
+		copiedTimer = setTimeout(() => (copiedLine = null), 1200);
+	}
+
+	const unsubscribe = onCurrencyStatus((loading) => {
+		if (!loading) ratesVersion++;
+	});
+	onDestroy(unsubscribe);
 
 	onMount(async () => {
 		await initCalpad();
 		ready = true;
-		doEvaluate();
-		setTimeout(() => doEvaluate(), 2000);
 	});
 
-	function doEvaluate() {
-		if (!ready) return;
-		results = evaluateDocument(content);
-	}
+	$effect(() => {
+		void ratesVersion;
+		if (ready) {
+			results = evaluateDocument(content);
+		}
+	});
 
 	function handleInput(e: Event) {
 		const target = e.target as HTMLTextAreaElement;
 		content = target.value;
-		doEvaluate();
 		onchange?.();
 	}
 
@@ -39,7 +53,7 @@
 			requestAnimationFrame(() => {
 				target.selectionStart = target.selectionEnd = start + 2;
 			});
-			doEvaluate();
+			onchange?.();
 		}
 	}
 
@@ -110,8 +124,16 @@
 			<div class="line">
 				<span class="line-input">{@html highlightWithLabel(line)}</span>
 				{#if result?.display}
-					<span class="line-result" class:error={result.is_error}>
-						{result.display}
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<span
+						class="line-result"
+						class:error={result.is_error}
+						class:copied={copiedLine === i}
+						onclick={() => copyResult(result.display, i)}
+						onkeydown={() => {}}
+						title="Click to copy"
+					>
+						{copiedLine === i ? 'Copied!' : result.display}
 					</span>
 				{/if}
 			</div>
@@ -169,6 +191,7 @@
 		pointer-events: none;
 		white-space: pre;
 		overflow-y: auto;
+		z-index: 2;
 	}
 
 	.line {
@@ -190,6 +213,20 @@
 		flex-shrink: 0;
 		text-align: right;
 		font-weight: 500;
+		pointer-events: auto;
+		cursor: pointer;
+		border-radius: 3px;
+		padding: 0 0.35rem;
+		margin: 0 -0.35rem;
+		transition: background 0.15s, opacity 0.15s;
+	}
+
+	.line-result:hover {
+		background: var(--bg-hover, rgba(255, 255, 255, 0.08));
+	}
+
+	.line-result.copied {
+		opacity: 0.6;
 	}
 
 	.line-result.error {

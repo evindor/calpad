@@ -17,32 +17,42 @@
 {#if open}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="backdrop" onclick={() => (open = false)} onkeydown={() => {}}></div>
-	<div class="picker">
-		{#each themes as theme}
-			<button
-				class="theme-option"
-				class:active={theme.id === current}
-				onclick={() => {
-					onchange(theme.id);
-					open = false;
-				}}
-			>
-				{theme.name}
-			</button>
-		{/each}
-	</div>
 {/if}
 
-<button class="trigger" onclick={() => (open = !open)} title="Change theme">
-	<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-		<circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
-		<path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor" />
-	</svg>
-</button>
+<div class="wrapper">
+	<button class="trigger" onclick={() => (open = !open)} title="Change theme">
+		<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+			<circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" />
+			<path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor" />
+		</svg>
+	</button>
+
+	{#if open}
+		<div class="picker">
+			{#each themes as theme}
+				<button
+					class="theme-option"
+					class:active={theme.id === current}
+					onclick={() => {
+						onchange(theme.id);
+						open = false;
+					}}
+				>
+					{theme.name}
+				</button>
+			{/each}
+		</div>
+	{/if}
+</div>
 
 <style>
+	.wrapper {
+		position: relative;
+	}
+
 	.trigger {
 		position: relative;
+		z-index: 12;
 	}
 
 	.backdrop {
