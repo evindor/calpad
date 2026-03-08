@@ -126,11 +126,8 @@ Data flow: User types → Svelte sends full document to WASM → Rust parses all
 - [ ] Fetch crypto prices
 
 ### Future (parked)
-- TUI mode (ratatui) — stubbed, next iteration
 - Plugin system via WASM modules
 - Collaborative editing (CRDT-based)
-- Command palette (Cmd+K)
-- Export to markdown
 
 ## Tech stack
 
