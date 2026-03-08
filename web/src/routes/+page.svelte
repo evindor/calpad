@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { browser } from "$app/environment";
+    import { base } from "$app/paths";
     import Editor from "$lib/components/Editor.svelte";
     import Sidebar from "$lib/components/Sidebar.svelte";
     import ThemePicker from "$lib/components/ThemePicker.svelte";
@@ -40,7 +41,7 @@
 
     async function ensureGuideNote() {
         if (guideNote) return;
-        const res = await fetch(`/guide.txt?at=${+Date.now()}`);
+        const res = await fetch(`${base}/guide.txt?at=${+Date.now()}`);
         const text = await res.text();
         const note = createGuideNote(text);
         await saveNote(note);
@@ -48,7 +49,7 @@
     }
 
     async function resetGuide() {
-        const res = await fetch(`/guide.txt?at=${+Date.now()}`);
+        const res = await fetch(`${base}/guide.txt?at=${+Date.now()}`);
         const text = await res.text();
         const note = createGuideNote(text);
         await saveNote(note);
