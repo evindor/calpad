@@ -79,6 +79,7 @@
 <style>
 	.sidebar {
 		width: var(--sidebar-width);
+		height: 100%;
 		background: var(--bg-sidebar);
 		border-right: 1px solid var(--border);
 		display: flex;

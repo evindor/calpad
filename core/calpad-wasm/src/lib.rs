@@ -11,6 +11,7 @@ pub struct JsLineResult {
     pub input: String,
     pub display: String,
     pub is_error: bool,
+    pub raw_number: Option<f64>,
 }
 
 #[wasm_bindgen]
@@ -30,11 +31,13 @@ pub fn evaluate(document: &str) -> JsValue {
         .into_iter()
         .map(|r| {
             let is_error = matches!(r.value, calpad_core::types::Value::Error(_));
+            let raw_number = if is_error { None } else { r.value.as_f64() };
             JsLineResult {
                 line_index: r.line_index,
                 input: r.input,
                 display: r.display,
                 is_error,
+                raw_number,
             }
         })
         .collect();

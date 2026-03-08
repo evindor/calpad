@@ -13,8 +13,11 @@
 	let copiedLine: number | null = $state(null);
 	let copiedTimer: ReturnType<typeof setTimeout>;
 
-	function copyResult(display: string, lineIndex: number) {
-		navigator.clipboard.writeText(display);
+	function copyResult(result: LineResult, lineIndex: number, e: MouseEvent) {
+		const text = e.shiftKey && result.raw_number != null
+			? String(result.raw_number)
+			: result.display;
+		navigator.clipboard.writeText(text);
 		clearTimeout(copiedTimer);
 		copiedLine = lineIndex;
 		copiedTimer = setTimeout(() => (copiedLine = null), 1200);
@@ -129,9 +132,9 @@
 						class="line-result"
 						class:error={result.is_error}
 						class:copied={copiedLine === i}
-						onclick={() => copyResult(result.display, i)}
+						onclick={(e: MouseEvent) => copyResult(result, i, e)}
 						onkeydown={() => {}}
-						title="Click to copy"
+						title="Click to copy · Shift+click for raw number"
 					>
 						{copiedLine === i ? 'Copied!' : result.display}
 					</span>

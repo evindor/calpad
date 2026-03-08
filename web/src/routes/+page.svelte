@@ -162,7 +162,7 @@ fromunix(0) + 365 days
 </svelte:head>
 
 <div class="app" data-theme={theme}>
-    {#if sidebarOpen}
+    <div class="sidebar-slot" class:collapsed={!sidebarOpen}>
         <Sidebar
             {notes}
             activeId={activeNote?.id ?? ""}
@@ -170,14 +170,21 @@ fromunix(0) + 365 days
             oncreate={handleCreate}
             ondelete={handleDelete}
         />
-    {/if}
+    </div>
 
     <main>
         <Editor bind:content onchange={handleContentChange} />
         <footer>
             <div class="footer-left">
-                <button onclick={toggleSidebar} title="Toggle sidebar (Ctrl+B)">
-                    {sidebarOpen ? "◀" : "▶"}
+                <button
+                    class="toggle-sidebar"
+                    class:open={sidebarOpen}
+                    onclick={toggleSidebar}
+                    title="Toggle sidebar (Ctrl+B)"
+                >
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M5 2.5l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </button>
             </div>
             <div class="footer-right">
@@ -203,6 +210,18 @@ fromunix(0) + 365 days
         background: var(--bg);
     }
 
+    .sidebar-slot {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        overflow: hidden;
+        transition: width 0.15s ease;
+        align-self: stretch;
+    }
+
+    .sidebar-slot.collapsed {
+        width: 0;
+    }
+
     main {
         flex: 1;
         display: flex;
@@ -223,6 +242,18 @@ fromunix(0) + 365 days
         display: flex;
         align-items: center;
         gap: 0.75rem;
+    }
+
+    .toggle-sidebar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.15s ease;
+        transform: rotate(0deg);
+    }
+
+    .toggle-sidebar.open {
+        transform: rotate(180deg);
     }
 
     .currency-loading {

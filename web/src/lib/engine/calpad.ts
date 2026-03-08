@@ -7,6 +7,7 @@ export interface LineResult {
 	input: string;
 	display: string;
 	is_error: boolean;
+	raw_number: number | null;
 }
 
 const CACHE_KEY = 'calpad-currency-rates';
