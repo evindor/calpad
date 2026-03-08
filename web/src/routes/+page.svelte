@@ -12,6 +12,8 @@
         deleteNote,
         createNote,
         titleFromContent,
+        createGuideNote,
+        GUIDE_NOTE_ID,
         type Note,
     } from "$lib/storage/notes";
 
@@ -22,12 +24,40 @@
     onDestroy(unsubCurrency);
 
     let notes: Note[] = $state([]);
+    let guideNote: Note | null = $state(null);
     let activeNote: Note | null = $state(null);
     let content = $state("");
     let theme = $state("monokai");
     let sidebarOpen = $state(true);
     let saveTimer: ReturnType<typeof setTimeout>;
     let shared = $state(false);
+
+    async function loadNotes() {
+        const all = await getAllNotes();
+        guideNote = all.find((n) => n.id === GUIDE_NOTE_ID) ?? null;
+        notes = all.filter((n) => n.id !== GUIDE_NOTE_ID);
+    }
+
+    async function ensureGuideNote() {
+        if (guideNote) return;
+        const res = await fetch(`/guide.txt?at=${+Date.now()}`);
+        const text = await res.text();
+        const note = createGuideNote(text);
+        await saveNote(note);
+        guideNote = note;
+    }
+
+    async function resetGuide() {
+        const res = await fetch(`/guide.txt?at=${+Date.now()}`);
+        const text = await res.text();
+        const note = createGuideNote(text);
+        await saveNote(note);
+        guideNote = note;
+        if (activeNote?.id === GUIDE_NOTE_ID) {
+            activeNote = note;
+            content = note.content;
+        }
+    }
 
     onMount(async () => {
         const saved = localStorage.getItem("calpad-theme");
@@ -51,7 +81,9 @@
             }
         }
 
-        notes = await getAllNotes();
+        await loadNotes();
+        await ensureGuideNote();
+
         if (notes.length === 0) {
             const note = createNote();
             note.content = WELCOME_CONTENT;
@@ -102,20 +134,20 @@ fromunix(0) + 365 days
         clearTimeout(saveTimer);
         saveTimer = setTimeout(async () => {
             await saveNote(snapshot);
-            notes = await getAllNotes();
+            await loadNotes();
         }, 300);
     }
 
     async function handleCreate() {
         const note = createNote();
         await saveNote(note);
-        notes = await getAllNotes();
+        await loadNotes();
         await selectNote(note.id);
     }
 
     async function handleDelete(id: string) {
         await deleteNote(id);
-        notes = await getAllNotes();
+        await loadNotes();
         if (notes.length === 0) {
             await handleCreate();
         } else if (activeNote?.id === id) {
@@ -166,9 +198,11 @@ fromunix(0) + 365 days
         <Sidebar
             {notes}
             activeId={activeNote?.id ?? ""}
+            {guideNote}
             onselect={selectNote}
             oncreate={handleCreate}
             ondelete={handleDelete}
+            onresetguide={resetGuide}
         />
     </div>
 
@@ -183,7 +217,13 @@ fromunix(0) + 365 days
                     title="Toggle sidebar (Ctrl+B)"
                 >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M5 2.5l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path
+                            d="M5 2.5l4.5 4.5-4.5 4.5"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
                     </svg>
                 </button>
             </div>

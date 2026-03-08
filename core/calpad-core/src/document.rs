@@ -16,10 +16,16 @@ pub fn evaluate_document(input: &str) -> Vec<LineResult> {
 /// Rates map currency_id (e.g. "EUR") to rate relative to USD
 /// (e.g. EUR=0.92 means 1 USD = 0.92 EUR).
 pub fn evaluate_document_with_rates(input: &str, rates: &HashMap<String, f64>) -> Vec<LineResult> {
+    evaluate_document_full(input, rates, None)
+}
+
+/// Evaluate with rates and an explicit "now" timestamp (seconds since epoch).
+pub fn evaluate_document_full(input: &str, rates: &HashMap<String, f64>, now_timestamp: Option<f64>) -> Vec<LineResult> {
     let lines: Vec<&str> = input.lines().collect();
     let mut results: Vec<LineResult> = Vec::with_capacity(lines.len());
     let mut ctx = EvalContext::new();
     ctx.set_currency_rates(rates.clone());
+    ctx.now_timestamp = now_timestamp;
     let mut prev_value: Option<Value> = None;
 
     for (i, line) in lines.iter().enumerate() {

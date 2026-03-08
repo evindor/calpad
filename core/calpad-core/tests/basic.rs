@@ -487,6 +487,69 @@ fn test_scale_million() {
     assert_eq!(results[0].display, "7,000,000");
 }
 
+// -- New scale variants --
+
+#[test]
+fn test_scale_uppercase_k() {
+    let results = evaluate_document("2K");
+    assert_eq!(results[0].display, "2,000");
+}
+
+#[test]
+fn test_scale_b() {
+    let results = evaluate_document("3B");
+    assert_eq!(results[0].display, "3,000,000,000");
+}
+
+#[test]
+fn test_scale_t() {
+    let results = evaluate_document("1T");
+    assert_eq!(results[0].display, "1,000,000,000,000");
+}
+
+#[test]
+fn test_scale_mil() {
+    let results = evaluate_document("5 mil");
+    assert_eq!(results[0].display, "5,000,000");
+}
+
+#[test]
+fn test_scale_bil() {
+    let results = evaluate_document("2 bil");
+    assert_eq!(results[0].display, "2,000,000,000");
+}
+
+#[test]
+fn test_scale_trillion() {
+    let results = evaluate_document("1 trillion");
+    assert_eq!(results[0].display, "1,000,000,000,000");
+}
+
+#[test]
+fn test_scale_b_not_bytes() {
+    // "B" alone after number = billion, not bytes (bytes needs unit context)
+    let results = evaluate_document("5B");
+    assert_eq!(results[0].display, "5,000,000,000");
+}
+
+#[test]
+fn test_scale_t_not_tonnes() {
+    let results = evaluate_document("2T");
+    assert_eq!(results[0].display, "2,000,000,000,000");
+}
+
+#[test]
+fn test_scale_currency_with_b() {
+    let results = evaluate_document("$1.5B");
+    assert_eq!(results[0].display, "$1,500,000,000");
+}
+
+#[test]
+fn test_scale_currency_with_t() {
+    let results = evaluate_document("$2T");
+    assert_eq!(results[0].display, "$2,000,000,000,000");
+}
+
 // -- Percentages --
 
 #[test]
@@ -785,4 +848,52 @@ fn test_now_not_assignable() {
     // "now = 5" should treat "now" as keyword, not variable assignment
     let results = evaluate_document("now");
     assert!(matches!(results[0].value, Value::DateTime(_)));
+}
+
+// ── Mixed-form area unit aliases ────────────────────────────────────
+
+#[test]
+fn test_sq_meters_alias() {
+    let results = evaluate_document("20 sq ft in sq meters");
+    assert_approx_display("20 sq ft in sq meters", 0, 1.85806, 0.001);
+    assert!(results[0].display.contains("sq m"));
+}
+
+#[test]
+fn test_sq_meter_alias() {
+    assert_approx_display("1 sq meter in sq feet", 0, 10.7639, 0.01);
+}
+
+#[test]
+fn test_sq_kilometers_alias() {
+    assert_approx_display("1 sq mile in sq kilometers", 0, 2.58999, 0.01);
+}
+
+#[test]
+fn test_sq_centimeters_alias() {
+    assert_approx_display("1 sq inch in sq centimeters", 0, 6.4516, 0.01);
+}
+
+// ── Mixed-form volume unit aliases ──────────────────────────────────
+
+#[test]
+fn test_cu_meters_alias() {
+    let results = evaluate_document("1000 liters in cu meters");
+    assert_approx_display("1000 liters in cu meters", 0, 1.0, 0.01);
+    assert!(results[0].display.contains("cu m"));
+}
+
+#[test]
+fn test_cu_centimeters_alias() {
+    assert_approx_display("1 liter in cu centimeters", 0, 1000.0, 1.0);
+}
+
+#[test]
+fn test_cb_meters_alias() {
+    assert_approx_display("35.3147 cu feet in cb meters", 0, 1.0, 0.01);
+}
+
+#[test]
+fn test_cb_centimeters_alias() {
+    assert_approx_display("1 cu inch in cb centimeters", 0, 16.3871, 0.01);
 }

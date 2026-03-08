@@ -1,0 +1,190 @@
+# Calpad Guide
+// A natural language calculator.
+// Type expressions, get results.
+
+# Basics
+2 + 2
+10 * 3
+2 ^ 8
+15 mod 4
+(3 + 7) * 2
+
+// Implicit multiplication
+6(3)
+2 * pi
+
+// Number formats
+0xFF
+0b1010
+0o77
+
+# Variables
+price = 49.99
+qty = 3
+price * qty
+
+tax = 8.25%
+20% of 100
+$100 + 8.25%
+
+# Math Functions
+sqrt(144)
+cbrt(27)
+abs(-42)
+round(3.7)
+ceil(2.1)
+floor(2.9)
+fact(6)
+
+log(1000)
+ln(e)
+
+sin(pi / 6)
+cos(0)
+arctan(1)
+
+# Cross-Line References
+100
+200
+300
+sum
+
+50
+75
+100
+average
+
+# Units
+// Length
+5 feet 10 inches in cm
+42.195 km in miles
+1 nautical mile in km
+
+// Weight
+11 stone 5 lbs in kg
+1 ounce in grams
+2.5 kg in lbs
+
+// Temperature
+98.6 fahrenheit in celsius
+-40 celsius in fahrenheit
+0 kelvin in celsius
+
+// Data storage
+4.2 MB * 847 in GB
+
+1 GiB in MB
+64 GB in GiB
+
+// Time
+3.5 hours in minutes
+1 year in days
+1 week in hours
+
+// Area & Volume
+2400 square feet in square meters
+1 acre in hectares
+5 liters in gallons
+2 tablespoons in ml
+
+// CSS
+16px in pt
+1 em in px
+
+// Angular
+180 degrees in radians
+pi radians in degrees
+
+# Format Conversions
+255 in hex
+255 in binary
+255 in octal
+5300 in sci
+
+# Percentages
+// Shopping
+30% of $120
+$120 - 30%
+
+// Tax
+$47.50 + 20%
+
+// Salary
+85000 + 12%
+
+// Analytics
+visitors = 14200
+signups = 568
+signups as a % of visitors
+
+// Reverse
+8% of what is 200
+15% on what is 920
+
+# Scales
+revenue = $4.2M
+users = 380k
+arpu = revenue / users
+
+burn = $420k
+burn * 12
+runway = $12M / prev
+
+valuation = $85M
+rev = $9.2M
+valuation / rev
+
+# Currencies
+// Travel budget
+flights = $1,240
+hotel = €89 * 7
+food = £35 * 7
+
+flights in EUR
+hotel in USD
+food in USD
+
+// Freelancing
+rate = €95
+hours = 22
+rate * hours
+prev in USD
+prev in GBP
+
+// Cross-currency
+$500 + €200
+¥10000 in USD
+₹75000 in EUR
+
+# Dates & Time
+now
+fromunix(0)
+fromunix(1446587186)
+
+// Deadlines
+now + 90 days
+now + 2 weeks
+now - 365 days
+
+// Project timeline
+now + 6 months
+now + 1 year
+
+# Document Formatting
+// Lines starting with # are headers
+// Lines starting with // are comments
+// Lines with Label: prefix show the label
+
+Rent: $1,800
+Utilities: $140
+Groceries: $450
+Transport: $120
+sum
+
+// Blank lines reset sum/average
+// so you can group calculations
+Week One: 13
+Week Two: 21
+Week Three: 18
+Week Four: 34
+average

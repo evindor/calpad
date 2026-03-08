@@ -6,3 +6,4 @@ pub mod document;
 
 pub use document::evaluate_document;
 pub use document::evaluate_document_with_rates;
+pub use document::evaluate_document_full;

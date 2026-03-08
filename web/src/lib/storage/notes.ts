@@ -67,6 +67,18 @@ export function createNote(): Note {
 	};
 }
 
+export const GUIDE_NOTE_ID = 'calpad-guide';
+
+export function createGuideNote(content: string): Note {
+	return {
+		id: GUIDE_NOTE_ID,
+		title: 'Calpad Guide',
+		content,
+		createdAt: 0,
+		updatedAt: 0
+	};
+}
+
 export function titleFromContent(content: string): string {
 	const firstLine = content.split('\n').find((l) => l.trim().length > 0);
 	if (!firstLine) return '';

@@ -3,6 +3,12 @@ use serde::Serialize;
 use std::collections::HashMap;
 use std::sync::Mutex;
 
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = Date)]
+    fn now() -> f64;
+}
+
 static CURRENCY_RATES: Mutex<Option<HashMap<String, f64>>> = Mutex::new(None);
 
 #[derive(Serialize)]
@@ -26,7 +32,8 @@ pub fn evaluate(document: &str) -> JsValue {
     let empty = HashMap::new();
     let rates_ref = rates.as_ref().unwrap_or(&empty);
 
-    let results = calpad_core::evaluate_document_with_rates(document, rates_ref);
+    let now_secs = now() / 1000.0; // Date.now() returns milliseconds
+    let results = calpad_core::evaluate_document_full(document, rates_ref, Some(now_secs));
     let js_results: Vec<JsLineResult> = results
         .into_iter()
         .map(|r| {

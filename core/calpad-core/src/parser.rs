@@ -505,30 +505,32 @@ impl<'a> Parser<'a> {
         // But do allow space for word suffixes (thousand, million, billion)
         let rem_no_ws = self.remaining();
 
-        // Check for single-char scale suffixes immediately adjacent (no space): 2k, 5M
+        // Check for single-char scale suffixes immediately adjacent (no space): 2k, 5M, 3B, 1T
         if let Some(first) = rem_no_ws.chars().next() {
-            if first == 'k' {
-                // Make sure it's not part of a longer word (like "kg", "km")
+            let scale = match first {
+                'k' | 'K' => Some(1_000.0),
+                'M' => Some(1_000_000.0),
+                'B' => Some(1_000_000_000.0),
+                'T' => Some(1_000_000_000_000.0),
+                _ => None,
+            };
+            if let Some(mult) = scale {
                 let after = &rem_no_ws[1..];
-                if after.is_empty() || !after.chars().next().unwrap().is_ascii_alphabetic() {
+                let at_boundary = after.is_empty() || !after.chars().next().unwrap().is_ascii_alphanumeric();
+                // k/K: reject if followed by alpha (kg, km, KB, KiB)
+                // M: reject if followed by alphanumeric (MB, MiB, Mb)
+                // B: reject if followed by alpha (bytes, bits, BRL) but not digits
+                // T: reject if followed by alpha (TB, TiB, THB, TRY, TWD)
+                if at_boundary {
                     self.pos += 1;
                     if let Expr::Number(n) = expr {
-                        return Ok(Expr::Number(n * 1_000.0));
-                    }
-                }
-            } else if first == 'M' {
-                // Make sure it's not part of a longer word (like "MB", "MiB", "Mb")
-                let after = &rem_no_ws[1..];
-                if after.is_empty() || !after.chars().next().unwrap().is_ascii_alphanumeric() {
-                    self.pos += 1;
-                    if let Expr::Number(n) = expr {
-                        return Ok(Expr::Number(n * 1_000_000.0));
+                        return Ok(Expr::Number(n * mult));
                     }
                 }
             }
         }
 
-        // Check for word scale suffixes (allow space before): thousand, million, billion
+        // Check for word scale suffixes (allow space before): thousand, million, billion, trillion
         self.skip_ws();
         let rem = self.remaining();
         let word = {
@@ -538,8 +540,9 @@ impl<'a> Parser<'a> {
 
         let multiplier = match word.to_lowercase().as_str() {
             "thousand" => Some(1_000.0),
-            "million" => Some(1_000_000.0),
-            "billion" => Some(1_000_000_000.0),
+            "mil" | "million" => Some(1_000_000.0),
+            "bil" | "billion" => Some(1_000_000_000.0),
+            "trillion" => Some(1_000_000_000_000.0),
             _ => None,
         };
 
@@ -907,20 +910,21 @@ impl<'a> Parser<'a> {
             return None;
         }
 
-        // Only match 3-letter uppercase currency codes
-        if rem.len() >= 3 {
+        // Only match 3-letter uppercase ASCII currency codes
+        let bytes = rem.as_bytes();
+        if bytes.len() >= 3
+            && bytes[0].is_ascii_uppercase()
+            && bytes[1].is_ascii_uppercase()
+            && bytes[2].is_ascii_uppercase()
+        {
             let candidate = &rem[..3];
-            if candidate.chars().all(|c| c.is_ascii_uppercase()) {
-                // Check it's a known currency and at a word boundary
-                if let Some(unit_def) = units::lookup_unit_by_id(candidate) {
-                    if units::is_currency(unit_def) {
-                        // Word boundary check
-                        let at_boundary = rem.len() == 3
-                            || !rem[3..].chars().next().unwrap().is_ascii_alphanumeric();
-                        if at_boundary {
-                            self.pos += 3;
-                            return Some(candidate.to_string());
-                        }
+            if let Some(unit_def) = units::lookup_unit_by_id(candidate) {
+                if units::is_currency(unit_def) {
+                    let at_boundary = bytes.len() == 3
+                        || !bytes[3].is_ascii_alphanumeric();
+                    if at_boundary {
+                        self.pos += 3;
+                        return Some(candidate.to_string());
                     }
                 }
             }

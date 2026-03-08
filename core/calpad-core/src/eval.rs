@@ -7,6 +7,7 @@ use crate::units;
 pub struct EvalContext {
     pub variables: HashMap<String, Value>,
     pub currency_rates: HashMap<String, f64>,
+    pub now_timestamp: Option<f64>,
 }
 
 impl EvalContext {
@@ -14,6 +15,7 @@ impl EvalContext {
         Self {
             variables: HashMap::new(),
             currency_rates: HashMap::new(),
+            now_timestamp: None,
         }
     }
 
@@ -40,10 +42,14 @@ pub fn eval(expr: &Expr, ctx: &EvalContext) -> Value {
         },
 
         Expr::Now => {
-            let ts = std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_secs_f64();
+            let ts = if let Some(t) = ctx.now_timestamp {
+                t
+            } else {
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs_f64()
+            };
             Value::DateTime(ts)
         }
 
