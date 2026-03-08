@@ -9,12 +9,12 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
+use ratatui::Frame;
 use ratatui::crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::layout::{Constraint, Layout, Position, Rect};
 use ratatui::style::Style;
 use ratatui::text::{Line, Span};
-use ratatui::widgets::{Block, Borders, List, ListItem, ListState, Paragraph};
-use ratatui::Frame;
+use ratatui::widgets::{Block, List, ListItem, ListState, Paragraph};
 
 use calpad_core::types::Value;
 
@@ -399,20 +399,8 @@ fn render_sidebar(frame: &mut Frame, area: Rect, app: &App) {
         })
         .collect();
 
-    let border_style = if app.focus == Focus::Sidebar {
-        Style::default().fg(theme.fg_muted)
-    } else {
-        Style::default().fg(theme.border)
-    };
-
     let list = List::new(items)
-        .block(
-            Block::default()
-                .title(" calpad ")
-                .title_style(Style::default().fg(theme.fg))
-                .borders(Borders::RIGHT)
-                .border_style(border_style),
-        )
+        .block(Block::default())
         .style(Style::default().bg(theme.bg_sidebar).fg(theme.fg_muted))
         .highlight_style(Style::default().bg(theme.bg_active).fg(theme.fg));
 
@@ -510,7 +498,11 @@ fn render_status(frame: &mut Frame, area: Rect, app: &App) {
     ];
 
     // Right-align rates status
-    let status_text = if app.rates_loaded { " \u{2713}" } else { " ..." };
+    let status_text = if app.rates_loaded {
+        " \u{2713}"
+    } else {
+        " ..."
+    };
     let left_len: usize = spans.iter().map(|s| s.content.chars().count()).sum();
     let padding = (area.width as usize).saturating_sub(left_len + status_text.len());
     spans.push(Span::raw(" ".repeat(padding)));

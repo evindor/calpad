@@ -16,7 +16,6 @@ pub struct Theme {
     pub error: Color,
     pub header: Color,
     pub comment: Color,
-    pub border: Color,
 }
 
 pub const THEMES: &[Theme] = &[
@@ -36,7 +35,6 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(249, 38, 114),
         header: Color::Rgb(230, 219, 116),
         comment: Color::Rgb(117, 113, 94),
-        border: Color::Rgb(62, 61, 50),
     },
     Theme {
         name: "dracula",
@@ -54,7 +52,6 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(255, 85, 85),
         header: Color::Rgb(241, 250, 140),
         comment: Color::Rgb(98, 114, 164),
-        border: Color::Rgb(68, 71, 90),
     },
     Theme {
         name: "nord",
@@ -72,7 +69,6 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(191, 97, 106),
         header: Color::Rgb(235, 203, 139),
         comment: Color::Rgb(76, 86, 106),
-        border: Color::Rgb(59, 66, 82),
     },
     Theme {
         name: "one-dark",
@@ -90,7 +86,6 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(224, 108, 117),
         header: Color::Rgb(229, 192, 123),
         comment: Color::Rgb(92, 99, 112),
-        border: Color::Rgb(62, 68, 81),
     },
     Theme {
         name: "catppuccin",
@@ -108,7 +103,6 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(243, 139, 168),
         header: Color::Rgb(249, 226, 175),
         comment: Color::Rgb(88, 91, 112),
-        border: Color::Rgb(49, 50, 68),
     },
     Theme {
         name: "gruvbox",
@@ -126,7 +120,6 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(251, 73, 52),
         header: Color::Rgb(250, 189, 47),
         comment: Color::Rgb(102, 92, 84),
-        border: Color::Rgb(60, 56, 54),
     },
     Theme {
         name: "solarized-dark",
@@ -144,7 +137,6 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(220, 50, 47),
         header: Color::Rgb(181, 137, 0),
         comment: Color::Rgb(88, 110, 117),
-        border: Color::Rgb(7, 54, 66),
     },
     Theme {
         name: "solarized-light",
@@ -162,6 +154,5 @@ pub const THEMES: &[Theme] = &[
         error: Color::Rgb(220, 50, 47),
         header: Color::Rgb(181, 137, 0),
         comment: Color::Rgb(147, 161, 161),
-        border: Color::Rgb(238, 232, 213),
     },
 ];
